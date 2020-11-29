@@ -7,19 +7,83 @@ import java.util.List;
 
 public class BowlingScoreService {
 
-    final int pins = 10;
+    final int totalPins = 10;
+    final int totalFrames = 10;
+
+
+    public boolean areValidScore(List<Game> games) {
+        for(Game game: games) {
+            int frameCount = 0;
+            boolean firstRoll = true;
+            boolean hasExtra = false;
+
+            List<String> chances = game.getChances();
+            for(int i  = 0; i < chances.size(); i++) {
+                if(frameCount == totalFrames) {
+                    System.err.println("Invalid game! Too many rolls (the game can not exceed more than 10 frames)");
+                    return false;
+                }
+                int chance = chances.get(i).equals("F") ? 0 : Integer.parseInt(chances.get(i));
+                if (chance < 0 || chance > totalPins) {
+                    System.err.println("Invalid game! Chances can not be bigger than 10 or less than 0");
+                    return false;
+                }
+                if(frameCount < 9) {
+                    if(firstRoll && chance == 10) {
+                        frameCount++;
+                        continue;
+                    } else if (firstRoll){
+                        if(i >= chances.size() - 1) {
+                            System.err.println("Invalid game! Some rolls are missing");
+                            return false;
+                        }
+                        int next = chances.get(i+1).equals("F") ? 0 : Integer.parseInt(chances.get(i+1));
+                        if(chance + next > 10) {
+                            System.err.println("Invalid game for " + game.getPlayer() + "! It's not possible to have more than 10 pinfalls in one frame");
+                            return false;
+                        }
+                        firstRoll = false;
+                    } else {
+                        frameCount++;
+                        firstRoll = true;
+                    }
+                } else {
+                    if(firstRoll) {
+                        if(i >= chances.size() - 1) {
+                            System.err.println("Invalid game! Some rolls are missing");
+                            return false;
+                        }
+                        int next = chances.get(i+1).equals("F") ? 0 : Integer.parseInt(chances.get(i+1));
+                        if(chance == 10 || chance + next == 10) {
+                            if(i + 1 >= chances.size() - 1) {
+                                System.err.println("Invalid game! Extra roll is missing");
+                                return false;
+                            }
+                            hasExtra = true;
+                            firstRoll = false;
+                            continue;
+                        }
+                        if(chance + next > 10) {
+                            System.err.println("Invalid game! It's not possible to have more than 10 pinfalls in a single frame");
+                            return false;
+                        }
+                    } else if (hasExtra){
+                        hasExtra = false;
+                    } else {
+                        frameCount++;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
     public void computeScore(Game game) {
-        int frameCount = 1;
+
         int score = 0;
         List<String> chances = game.getChances();
 
-        for(String chance: chances) {
-            if (!chance.equals("F") && (Integer.parseInt(chance) < 0 || Integer.parseInt(chance) > pins)) {
-                System.err.println("Invalid game! Chances can not be bigger than 10 or less than 0");
-                return;
-            }
-        }
+        int frameCount = 0;
 
         boolean lastFrame = false;
 
@@ -34,19 +98,19 @@ public class BowlingScoreService {
             int chance1 = chances.get(i).equals("F") ? 0 : Integer.parseInt(chances.get(i));
             score += chance1;
 
-            if(chance1 == pins) {
+            if(chance1 == totalPins) {
                 // Strike! Sum i+1 and i+2 pinfalls
                 int next1 = chances.get(i+1).equals("F") ? 0 : Integer.parseInt(chances.get(i+1));
                 int next2 = chances.get(i+2).equals("F") ? 0 : Integer.parseInt(chances.get(i+2));
                 score = score + next1 + next2;
                 if(lastFrame) {
-                    Frame frame = new Frame(frameCount, chances.get(i), chances.get(i+1), chances.get(i+2), score);
                     frameCount++;
+                    Frame frame = new Frame(frameCount, chances.get(i), chances.get(i+1), chances.get(i+2), score);
                     game.addFrame(frame);
                     break;
                 }
-                Frame frame = new Frame(frameCount, chances.get(i), score);
                 frameCount++;
+                Frame frame = new Frame(frameCount, chances.get(i), score);
                 game.addFrame(frame);
                 continue;
             }
@@ -55,10 +119,10 @@ public class BowlingScoreService {
             // Second chance on frame
             int chance2 = chances.get(i).equals("F") ? 0 : Integer.parseInt(chances.get(i));
             score += chance2;
-            if(chance1 + chance2 > pins) {
+            if(chance1 + chance2 > totalPins) {
                 System.err.println("Invalid game! There can not be more than 10 pinfalls in a frame");
                 return;
-            } else if(chance1 + chance2 == pins) {
+            } else if(chance1 + chance2 == totalPins) {
                 // Spare! Sum i+1 pinfalls
                 int next = chances.get(i+1).equals("F") ? 0 : Integer.parseInt(chances.get(i+1));
                 score = score + next;
@@ -67,17 +131,17 @@ public class BowlingScoreService {
                     i++;
                     int extra = chances.get(i).equals("F") ? 0 : Integer.parseInt(chances.get(i));
                     score += extra;
-                    Frame frame = new Frame(frameCount, chances.get(i-2), chances.get(i-1), chances.get(i), score);
                     frameCount++;
+                    Frame frame = new Frame(frameCount, chances.get(i-2), chances.get(i-1), chances.get(i), score);
                     game.addFrame(frame);
                 } else {
-                    Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
                     frameCount++;
+                    Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
                     game.addFrame(frame);
                 }
             } else {
-                Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
                 frameCount++;
+                Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
                 game.addFrame(frame);
             }
         }
