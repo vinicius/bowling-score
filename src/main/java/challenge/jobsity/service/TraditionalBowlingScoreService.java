@@ -5,12 +5,21 @@ import challenge.jobsity.model.Score;
 
 import java.util.List;
 
+/**
+ * Service responsible for validating, computing and printing bowling scores
+ */
 public class TraditionalBowlingScoreService implements BowlingScoreService {
 
     final int totalPins = 10;
     final int totalFrames = 10;
 
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param scores
+     * @return
+     */
     @Override
     public boolean areValidScores(List<Score> scores) {
         for(Score score : scores) {

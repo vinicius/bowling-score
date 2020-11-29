@@ -23,6 +23,7 @@ public class BowlingScoreApp {
     private static BowlingScoreService traditionalBowlingScoreService = new TraditionalBowlingScoreService();
 
     public static void main( String[] args ) {
+        // Validating program usage
         if(args.length < 1) {
             System.out.println("Usage: java <bowling-jar-file> <input-file>");
             return;
@@ -36,6 +37,8 @@ public class BowlingScoreApp {
             List<Score> scores = new ArrayList<>();
             stream.forEach(line -> {
                 String[] playerRoll = line.split("\\s+");
+
+                // Validating input lines values
                 if(playerRoll.length > 2 || playerRoll.length < 2) {
                     System.err.println("Input error: " + line + "\nEach line must contain two arguments and only two: the player's name and the pinfalls number (tab-separated)");
                     return;
@@ -53,15 +56,22 @@ public class BowlingScoreApp {
                     }
                 }
 
+                // Buiding player's rolls maps
                 playerRollsMap.putIfAbsent(player, new ArrayList<>());
                 playerRollsMap.get(player).add(roll);
             });
+            // Building scores from rolls maps
             playerRollsMap.forEach((player, rolls) -> {
                 scores.add(new Score(player, rolls));
             });
 
+            // Validating bowling scores
             if(traditionalBowlingScoreService.areValidScores(scores)) {
+
+                // Computing scores
                 scores.forEach(traditionalBowlingScoreService::computeScore);
+
+                // Printing scores
                 traditionalBowlingScoreService.printBowlingScore(scores);
             }
         } catch (NoSuchFileException nsfe) {

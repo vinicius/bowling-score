@@ -1,10 +1,33 @@
 package challenge.jobsity.model;
 
+/**
+ * Score frame model
+ */
 public class Frame {
+
+    /**
+     * Frame number
+     */
     private int number;
+
+    /**
+     * Frame first roll
+     */
     private String roll1;
+
+    /**
+     * Frame second roll
+     */
     private String roll2;
+
+    /**
+     * Frame extra roll
+     */
     private String rollExtra;
+
+    /**
+     * Frame partial score
+     */
     private int partialScore;
 
     public Frame(int number, String roll1, int partialScore) {

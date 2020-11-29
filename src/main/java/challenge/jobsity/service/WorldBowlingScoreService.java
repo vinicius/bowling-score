@@ -25,6 +25,11 @@ public class WorldBowlingScoreService implements BowlingScoreService {
         scores.forEach(WorldBowlingScoreService::printGameScore);
     }
 
+    /**
+     * Prints the game score using tab-separated format.
+     *
+     * @param score
+     */
     private static void printGameScore(Score score) {
         System.out.println(score.getPlayer());
         System.out.print("Pinfalls\t");
@@ -35,6 +40,11 @@ public class WorldBowlingScoreService implements BowlingScoreService {
         System.out.println();
     }
 
+    /**
+     * Prints the frame pinfalls using 'X' for strike, 'F' for fouls and '/' for spares.
+     *
+     * @param f score frame
+     */
     private static void printFramePinfalls(Frame f) {
         String roll1 = f.getRoll1();
         String roll2 = " " + f.getRoll2();
@@ -49,6 +59,10 @@ public class WorldBowlingScoreService implements BowlingScoreService {
         System.out.print(roll1 + roll2 + "\t\t");
     }
 
+    /**
+     * Prints the frame (partial) score.
+     * @param f
+     */
     private static void printFramePartialScore(Frame f) {
         System.out.print(f.getPartialScore() + "\t\t");
     }

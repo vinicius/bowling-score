@@ -3,10 +3,24 @@ package challenge.jobsity.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Bowling score model
+ */
 public class Score {
 
+    /**
+     * Player name
+     */
     private String player;
+
+    /**
+     * List of score rolls
+     */
     private List<String> rolls;
+
+    /**
+     * List of score frames
+     */
     private List<Frame> frames;
 
     public Score(String player, List<String> rolls) {
