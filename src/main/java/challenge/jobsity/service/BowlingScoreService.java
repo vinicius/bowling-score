@@ -67,6 +67,7 @@ public class BowlingScoreService {
                             System.err.println("Invalid game! It's not possible to have more than 10 pinfalls in a single frame");
                             return false;
                         }
+                        firstRoll = false;
                     } else if (hasExtra){
                         hasExtra = false;
                     } else {
