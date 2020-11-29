@@ -3,15 +3,15 @@ package challenge.jobsity.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class Score {
 
     private String player;
-    private List<String> chances;
+    private List<String> rolls;
     private List<Frame> frames;
 
-    public Game(String player, List<String> chances) {
+    public Score(String player, List<String> rolls) {
         this.player = player;
-        this.chances = chances;
+        this.rolls = rolls;
         frames = new ArrayList<>();
     }
 
@@ -23,12 +23,12 @@ public class Game {
         this.player = player;
     }
 
-    public List<String> getChances() {
-        return chances;
+    public List<String> getRolls() {
+        return rolls;
     }
 
-    public void setChances(List<String> chances) {
-        this.chances = chances;
+    public void setRolls(List<String> rolls) {
+        this.rolls = rolls;
     }
 
     public void addFrame(Frame frame) {

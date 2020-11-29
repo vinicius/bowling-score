@@ -1,7 +1,7 @@
 package challenge.jobsity;
 
-import challenge.jobsity.model.Game;
-import challenge.jobsity.service.BowlingScoreService;
+import challenge.jobsity.model.Score;
+import challenge.jobsity.service.TraditionalBowlingScoreService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  */
 public class BowlingScoreApp {
 
-    private static BowlingScoreService bowlingScoreService = new BowlingScoreService();
+    private static TraditionalBowlingScoreService traditionalBowlingScoreService = new TraditionalBowlingScoreService();
 
     public static void main( String[] args ) {
         if(args.length < 1) {
@@ -31,37 +31,37 @@ public class BowlingScoreApp {
         }
 
         try (Stream<String> stream = Files.lines(Paths.get(args[0]))) {
-            Map<String, List<String>> playerChancesMap = new HashMap<>();
-            List<Game> games = new ArrayList<>();
+            Map<String, List<String>> playerRollsMap = new HashMap<>();
+            List<Score> scores = new ArrayList<>();
             stream.forEach(line -> {
-                String[] playerChance = line.split("\\s+");
-                if(playerChance.length > 2 || playerChance.length < 2) {
+                String[] playerRoll = line.split("\\s+");
+                if(playerRoll.length > 2 || playerRoll.length < 2) {
                     System.err.println("Input error: " + line + "\nEach line must contain two arguments and only two: the player's name and the pinfalls number (tab-separated)");
                     return;
                 }
 
-                String player = playerChance[0];
-                String chance = playerChance[1];
+                String player = playerRoll[0];
+                String roll = playerRoll[1];
 
-                if(!chance.equals("F")) {
+                if(!roll.equals("F")) {
                     try {
-                        Integer.parseInt(chance);
+                        Integer.parseInt(roll);
                     } catch (NumberFormatException nfe) {
-                        System.err.println("Input error: " + line + "\nThe player chance should be a number (or F in case of foul)");
+                        System.err.println("Input error: " + line + "\nThe player roll should be a number (or F in case of foul)");
                         return;
                     }
                 }
 
-                playerChancesMap.putIfAbsent(player, new ArrayList<>());
-                playerChancesMap.get(player).add(chance);
+                playerRollsMap.putIfAbsent(player, new ArrayList<>());
+                playerRollsMap.get(player).add(roll);
             });
-            playerChancesMap.forEach((player, chances) -> {
-                games.add(new Game(player, chances));
+            playerRollsMap.forEach((player, rolls) -> {
+                scores.add(new Score(player, rolls));
             });
 
-            if(bowlingScoreService.areValidScore(games)) {
-                games.forEach(bowlingScoreService::computeScore);
-                bowlingScoreService.printBowlingScore(games);
+            if(traditionalBowlingScoreService.areValidScores(scores)) {
+                scores.forEach(traditionalBowlingScoreService::computeScore);
+                traditionalBowlingScoreService.printBowlingScore(scores);
             }
         } catch (NoSuchFileException nsfe) {
             System.err.println("File not found: " + nsfe.getMessage());
