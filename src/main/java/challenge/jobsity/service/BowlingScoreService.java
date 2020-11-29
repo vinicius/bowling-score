@@ -101,18 +101,14 @@ public class BowlingScoreService {
     private static void printFramePinfalls(Frame f) {
         String chance1 = f.getChance1();
         String chance2 = " " + f.getChance2();
-        String extra = " " + f.getChanceExtra();
+        String extra = f.getChanceExtra() != null ? " " + f.getChanceExtra() : "";
         if(f.getChance1().equals("10")) {
             chance1 = "  X";
             if(f.getNumber() != 10) {
                 chance2 = "";
-                extra = "";
             }
         } else if(!chance1.equals("F") && !chance2.trim().equals("F") && (Integer.parseInt(chance1) + Integer.parseInt(chance2.trim()) == 10)) {
             chance2 = " /";
-        }
-        if(f.getNumber() != 10) {
-            extra = "";
         }
         System.out.print(chance1 + chance2 + extra + "\t\t");
     }
