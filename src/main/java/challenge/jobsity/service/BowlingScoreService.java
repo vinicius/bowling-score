@@ -39,11 +39,15 @@ public class BowlingScoreService {
                 int next1 = chances.get(i+1).equals("F") ? 0 : Integer.parseInt(chances.get(i+1));
                 int next2 = chances.get(i+2).equals("F") ? 0 : Integer.parseInt(chances.get(i+2));
                 score = score + next1 + next2;
-                Frame frame = new Frame(frameCount, chances.get(i), score);
-                game.addFrame(frame);
                 if(lastFrame) {
+                    Frame frame = new Frame(frameCount, chances.get(i), chances.get(i+1), chances.get(i+2), score);
+                    frameCount++;
+                    game.addFrame(frame);
                     break;
                 }
+                Frame frame = new Frame(frameCount, chances.get(i), score);
+                frameCount++;
+                game.addFrame(frame);
                 continue;
             }
             i++;
@@ -64,21 +68,56 @@ public class BowlingScoreService {
                     int extra = chances.get(i).equals("F") ? 0 : Integer.parseInt(chances.get(i));
                     score += extra;
                     Frame frame = new Frame(frameCount, chances.get(i-2), chances.get(i-1), chances.get(i), score);
+                    frameCount++;
                     game.addFrame(frame);
                 } else {
                     Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
+                    frameCount++;
                     game.addFrame(frame);
                 }
             } else {
                 Frame frame = new Frame(frameCount, chances.get(i-1), chances.get(i), score);
+                frameCount++;
                 game.addFrame(frame);
             }
         }
-        System.out.println(":: " + game.getPlayer() + "::");
+    }
+
+    public void printBowlingScore(List<Game> games) {
+        System.out.println("Frame\t\t1\t\t2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8\t\t9\t\t10");
+        games.forEach(BowlingScoreService::printGameScore);
+    }
+
+    private static void printGameScore(Game game) {
+        System.out.println(game.getPlayer());
+        System.out.print("Pinfalls\t");
+        game.getFrames().forEach(BowlingScoreService::printFramePinfalls);
+        System.out.println();
+        System.out.print("Score\t\t");
         game.getFrames().forEach(BowlingScoreService::printFramePartialScore);
+        System.out.println();
+    }
+
+    private static void printFramePinfalls(Frame f) {
+        String chance1 = f.getChance1();
+        String chance2 = " " + f.getChance2();
+        String extra = " " + f.getChanceExtra();
+        if(f.getChance1().equals("10")) {
+            chance1 = "  X";
+            if(f.getNumber() != 10) {
+                chance2 = "";
+                extra = "";
+            }
+        } else if(!chance1.equals("F") && !chance2.trim().equals("F") && (Integer.parseInt(chance1) + Integer.parseInt(chance2.trim()) == 10)) {
+            chance2 = " /";
+        }
+        if(f.getNumber() != 10) {
+            extra = "";
+        }
+        System.out.print(chance1 + chance2 + extra + "\t\t");
     }
 
     private static void printFramePartialScore(Frame f) {
-        System.out.println(f.getPartialScore());
+        System.out.print(f.getPartialScore() + "\t\t");
     }
 }

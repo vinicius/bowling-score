@@ -54,11 +54,11 @@ public class BowlingScoreApp {
                 playerChancesMap.putIfAbsent(player, new ArrayList<>());
                 playerChancesMap.get(player).add(chance);
             });
-            System.out.println(playerChancesMap);
             playerChancesMap.forEach((player, chances) -> {
                 games.add(new Game(player, chances));
             });
             games.forEach(bowlingScoreService::computeScore);
+            bowlingScoreService.printBowlingScore(games);
         } catch (NoSuchFileException nsfe) {
             System.err.println("File not found: " + nsfe.getMessage());
         } catch (IOException ioe) {
