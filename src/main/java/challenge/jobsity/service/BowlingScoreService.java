@@ -74,6 +74,10 @@ public class BowlingScoreService {
                     }
                 }
             }
+            if(frameCount < 10) {
+                System.err.println("Invalid game! Some frames are missing");
+                return false;
+            }
         }
         return true;
     }
