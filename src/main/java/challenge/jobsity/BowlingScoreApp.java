@@ -1,6 +1,7 @@
 package challenge.jobsity;
 
 import challenge.jobsity.model.Score;
+import challenge.jobsity.service.BowlingScoreService;
 import challenge.jobsity.service.TraditionalBowlingScoreService;
 
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  */
 public class BowlingScoreApp {
 
-    private static TraditionalBowlingScoreService traditionalBowlingScoreService = new TraditionalBowlingScoreService();
+    private static BowlingScoreService traditionalBowlingScoreService = new TraditionalBowlingScoreService();
 
     public static void main( String[] args ) {
         if(args.length < 1) {

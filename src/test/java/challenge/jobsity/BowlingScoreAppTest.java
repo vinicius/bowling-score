@@ -7,8 +7,7 @@ import org.junit.Test;
 /**
  * Unit test for Bowling Score App
  */
-public class BowlingScoreAppTest
-{
+public class BowlingScoreAppTest {
     /**
      * Rigorous Test :-)
      */
