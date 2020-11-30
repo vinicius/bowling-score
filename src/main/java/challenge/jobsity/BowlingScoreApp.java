@@ -31,39 +31,17 @@ public class BowlingScoreApp {
             System.err.println("Too many arguments!");
             return;
         }
+        BowlingScoreApp app = new BowlingScoreApp();
+        app.execute(args[0]);
+    }
 
-        try (Stream<String> stream = Files.lines(Paths.get(args[0]))) {
-            Map<String, List<String>> playerRollsMap = new HashMap<>();
-            List<Score> scores = new ArrayList<>();
-            stream.forEach(line -> {
-                String[] playerRoll = line.split("\\s+");
+    public void execute(String inputFilename) {
 
-                // Validating input lines values
-                if(playerRoll.length > 2 || playerRoll.length < 2) {
-                    System.err.println("Input error: " + line + "\nEach line must contain two arguments and only two: the player's name and the pinfalls number (tab-separated)");
-                    return;
-                }
+        try (Stream<String> stream = Files.lines(Paths.get(inputFilename))) {
 
-                String player = playerRoll[0];
-                String roll = playerRoll[1];
+            Map<String, List<String>> playerRollsMap = buildingPlayerRollsMap(stream);
 
-                if(!roll.equals("F")) {
-                    try {
-                        Integer.parseInt(roll);
-                    } catch (NumberFormatException nfe) {
-                        System.err.println("Input error: " + line + "\nThe player roll should be a number (or F in case of foul)");
-                        return;
-                    }
-                }
-
-                // Buiding player's rolls maps
-                playerRollsMap.putIfAbsent(player, new ArrayList<>());
-                playerRollsMap.get(player).add(roll);
-            });
-            // Building scores from rolls maps
-            playerRollsMap.forEach((player, rolls) -> {
-                scores.add(new Score(player, rolls));
-            });
+            List<Score> scores = buildingScoresFromRollsMaps(playerRollsMap);
 
             // Validating bowling scores
             if(traditionalBowlingScoreService.areValidScores(scores)) {
@@ -79,5 +57,44 @@ public class BowlingScoreApp {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    public List<Score> buildingScoresFromRollsMaps(Map<String, List<String>> playerRollsMap) {
+        // Building scores from rolls maps
+        List<Score> scores = new ArrayList<>();
+        playerRollsMap.forEach((player, rolls) -> {
+            scores.add(new Score(player, rolls));
+        });
+        return scores;
+    }
+
+    public Map<String, List<String>> buildingPlayerRollsMap(Stream<String> stream) {
+        Map<String, List<String>> playerRollsMap = new HashMap<>();
+        stream.forEach(line -> {
+            String[] playerRoll = line.split("\\s+");
+
+            // Validating input lines values
+            if(playerRoll.length > 2 || playerRoll.length < 2) {
+                System.err.println("Input error: " + line + "\nEach line must contain two arguments and only two: the player's name and the pinfalls number (tab-separated)");
+                return;
+            }
+
+            String player = playerRoll[0];
+            String roll = playerRoll[1];
+
+            if(!roll.equals("F")) {
+                try {
+                    Integer.parseInt(roll);
+                } catch (NumberFormatException nfe) {
+                    System.err.println("Input error: " + line + "\nThe player roll should be a number (or F in case of foul)");
+                    return;
+                }
+            }
+
+            // Buiding player's rolls maps
+            playerRollsMap.putIfAbsent(player, new ArrayList<>());
+            playerRollsMap.get(player).add(roll);
+        });
+        return playerRollsMap;
     }
 }
