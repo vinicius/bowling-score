@@ -5,9 +5,9 @@ This program computes a bowling score given a data input with the player's rolls
 ## Input
 Each line of the input file must be on the format below:
 
-```<player name> <pinfalls>```
+```<player> <pinfalls>```
 
-The player name must be a string containing no spaces and the pinfalls must be a integer representing the number of pins knocked down on this roll.
+The player must be a string representing the player's name, containing no spaces, and the pinfalls must be a integer representing the number of pins knocked down on this roll.
 
 Example:
 
