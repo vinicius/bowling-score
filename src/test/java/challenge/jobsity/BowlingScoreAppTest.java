@@ -31,6 +31,7 @@ public class BowlingScoreAppTest {
     List<Score> foulGameScores;
     List<Score> zeroGameScores;
     List<Score> manyRollsScores;
+    List<Score> invalidScores;
 
     @Before
     public void prepareInputs() {
@@ -41,6 +42,7 @@ public class BowlingScoreAppTest {
         String foulGameInput = "src/test/resources/foul-game.txt";
         String zeroGameInput = "src/test/resources/zero-game.txt";
         String manyRollsInput = "src/test/resources/score-many.txt";
+        String invalidInput = "src/test/resources/invalid-sample.txt";
         try {
             Stream<String> stream = Files.lines(Paths.get(validInput));
             Map<String, List<String>> playerRollsMap = app.buildingPlayerRollsMap(stream);
@@ -72,6 +74,11 @@ public class BowlingScoreAppTest {
 
             manyRollsScores = app.buildingScoresFromRollsMaps(playerRollsMap);
 
+            stream = Files.lines(Paths.get(invalidInput));
+            playerRollsMap = app.buildingPlayerRollsMap(stream);
+
+            invalidScores = app.buildingScoresFromRollsMaps(playerRollsMap);
+
         } catch (NoSuchFileException nsfe) {
             System.err.println("File not found: " + nsfe.getMessage());
         } catch (IOException ioe) {
@@ -85,6 +92,14 @@ public class BowlingScoreAppTest {
     @Test
     public void testValidScores() {
         assertTrue(service.areValidScores(validScores));
+    }
+
+    /**
+     * Test invalid scores
+     */
+    @Test
+    public void testInvalidScores() {
+        assertFalse(service.areValidScores(invalidScores));
     }
 
     /**

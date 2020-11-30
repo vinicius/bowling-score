@@ -64,13 +64,32 @@ public class TraditionalBowlingScoreService implements BowlingScoreService {
                             return false;
                         }
                         int next = rolls.get(i+1).equals("F") ? 0 : Integer.parseInt(rolls.get(i+1));
-                        if(roll == 10 || roll + next == 10) {
+                        if(roll == 10) {
                             if(i + 1 >= rolls.size() - 1) {
                                 System.err.println("Invalid score! Extra roll is missing");
                                 return false;
                             }
                             hasExtra = true;
                             firstRoll = false;
+                            int extra = rolls.get(i+2).equals("F") ? 0 : Integer.parseInt(rolls.get(i+2));
+                            if(next + extra > 10) {
+                                System.err.println("Invalid score! Last rolls after strike can not be greater than 10");
+                                return false;
+                            }
+                            continue;
+                        }
+                        if(roll + next == 10) {
+                            if(i + 1 >= rolls.size() - 1) {
+                                System.err.println("Invalid score! Extra roll is missing");
+                                return false;
+                            }
+                            hasExtra = true;
+                            firstRoll = false;
+                            int extra = rolls.get(i+2).equals("F") ? 0 : Integer.parseInt(rolls.get(i+2));
+                            if(extra > 10) {
+                                System.err.println("Last roll after spare can not be greater than 10");
+                                return false;
+                            }
                             continue;
                         }
                         if(roll + next > 10) {
