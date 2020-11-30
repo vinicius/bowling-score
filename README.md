@@ -33,7 +33,7 @@ The character 'F' is used to represent a foul (e.g. line was crossed during thro
 
 ## Usage
 
-To execute the program, execute the jar file passing the input file as argument.
+To execute the program, execute the jar file inside target directory passing the input file as argument.
 
 Example:
 
