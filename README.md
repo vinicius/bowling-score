@@ -38,7 +38,7 @@ To execute the program, execute the jar file passing the input file as argument.
 Example:
 
 ```
-java -jar bowling-score-0.1.0-SNAPSHOT.jar ../src/main/resources/score-sample.txt
+java -jar bowling-score-0.1.0.jar ../src/main/resources/score-sample.txt
 ```
 
 ## Output
