@@ -73,8 +73,14 @@ public class TraditionalBowlingScoreService implements BowlingScoreService {
                             firstRoll = false;
                             int extra = rolls.get(i+2).equals("F") ? 0 : Integer.parseInt(rolls.get(i+2));
                             if(next + extra > 10) {
-                                System.err.println("Invalid score! Last rolls after strike can not be greater than 10");
-                                return false;
+                                if(next < 10) {
+                                    System.err.println("Invalid score! Last rolls after strike can not be greater than 10");
+                                    return false;
+                                }
+                                if(next + extra > 20) {
+                                    System.err.println("Invalid score! Last roll after double strike can not be greater than 10");
+                                    return false;
+                                }
                             }
                             continue;
                         }
